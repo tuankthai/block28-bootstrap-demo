@@ -1,23 +1,39 @@
-import logo from './logo.svg';
+
 import './App.css';
+import 'bootstrap/dist/css/bootstrap.min.css'
+import NavSearchBar from './components/NavBar'
+import { musicData } from './Data.js';
+import MusicCard from './components/MusicCard'
+import { useEffect, useState } from 'react';
+
+function RenderData({ data}) {
+  return data.map(music => <MusicCard
+    artist={music.artist}
+    genre={music.genre}
+    year={music.year}
+    albumName={music.albumName} />)
+  
+}
 
 function App() {
+  const [keyWord, setKeyWord] = useState("");
+  const [data, setData] = useState(musicData)
+
+  useEffect(() => {
+    const dataResult = data.filter(album => album.albumName.includes(keyWord))
+    console.log("test", { dataResult })
+    setData(dataResult)
+  }, [keyWord])
+  
+  console.log(keyWord, data)
+   
+  // console.log(musicData)
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <NavSearchBar data={ data}  keyWord={keyWord} setData={setData }  setKeyWord={setKeyWord } />
+      <ul>
+        <RenderData data={ data} />
+      </ul>
     </div>
   );
 }
